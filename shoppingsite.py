@@ -6,10 +6,11 @@ put melons in a shopping cart.
 Authors: Joel Burton, Christian Fernandez, Meggie Mahnken, Katie Byers.
 """
 
-from flask import Flask, render_template, redirect, flash, session
+from flask import Flask, render_template, redirect, flash, session, request
 import jinja2
 
 import melons
+import customers
 
 app = Flask(__name__)
 
@@ -77,10 +78,15 @@ def show_shopping_cart():
     # been added to the session
 
     session.setdefault("cart", {})
-
     melons_in_cart = []
-    for melon in session["cart"].keys():
-        melons_in_cart.append(melons.get_by_id(melon))
+    total_cost = 0
+
+    for item in session["cart"].keys():
+        melon = melons.get_by_id(item)
+        melons_in_cart.append(melon)
+        total_cost += melon.price * session["cart"][item]
+
+        session["total"] = "${price:.2f}".format(price=total_cost)
 
     return render_template("cart.html",
                            shopping_cart=melons_in_cart)
@@ -144,7 +150,18 @@ def process_login():
     # - if they don't, flash a failure message and redirect back to "/login"
     # - do the same if a Customer with that email doesn't exist
 
-    return "Oops! This needs to be implemented"
+    email = request.form['email']
+    password = request.form['password']
+
+    customer = customers.get_by_email(email)
+
+    if customer and customer.password == password:
+        session['current-user'] = email
+        flash("Logged in as {}".format(email))
+        return redirect("/melons")
+    else:
+        flash("Invalid email or password.")
+        return redirect("/login")
 
 
 @app.route("/checkout")

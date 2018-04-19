@@ -1,11 +1,7 @@
-<html>
-<head>
-  <title>Login</title>
-  <link rel="stylesheet"
-          href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.css"/>
-  <link rel="stylesheet" href="/static/css/site.css"/>
-</head>
-<body>
+
+{% extends 'base.html' %}
+
+{% block body %}
 
 <form class="form-signin" method="POST">
 
@@ -35,6 +31,4 @@
 
 </form>
 
-</body>
-</html>
-
+{% endblock %}
