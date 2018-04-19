@@ -27,10 +27,10 @@ class Melon(object):
         self.color = color
         self.seedless = seedless
 
-    def price_str(self):
+    def price_str(self, num=1):
         """Return price formatted as string $x.xx"""
 
-        return "${price:.2f}".format(price=self.price)
+        return "${price:.2f}".format(price=self.price * num)
 
     def __repr__(self):
         """Convenience method to show information about melon in console."""
